@@ -1,71 +1,56 @@
   import React, { Component } from 'react';
   import './User.css';
   import './bootstrap.min.css';
+  import {connect} from 'react-redux';
+  import * as userActions from '../../actions/userActions';
+  import './User.css';
+  import axios from 'axios';
 
-  class User extends Component {
-    constructor() {
-      super();
+  class Users extends Component {
+    constructor(props, context) {
+      super(props, context);
       this.state = {
-        userName: '',
-        city: '',
-        email: '',
-        phone: ''
+        user: { name: ''
+        }
       };
-      // alternative binding method if you don't use arrow functions
-      // this.handleOnChange = this.handleOnChange.bind(this);
     }
 
-    handleOnChange = e => {
-      const { target: { value, name } } = e;
-      this.setState({
-        [name]: value
-      });
+    onNameChange = e => {
+      const user = this.state.user;
+      user.name = e.target.value;
+      this.setState({ user: user });
     }
 
-    // here we use the preventDefault() method to cancel the default submit event
-    handleOnSubmit = e => {
-      e.preventDefault();
-      const { userName, city, email, phone } = this.state;
-      const data = {
-        userName,
-        city,
-        email,
-        phone
-      };
+    // onClickSave = () => {
+    //   this.props.dispatch(userActions.createUser(this.state.user));
+    //   // alert(`Saving ${this.state.user.name}`);
+    // }
 
-      // just checking to see if we collected the data as required
-      console.log('User Data:', data);
+    userRow(user, index) {
+      return <div key={index}>{user.name}</div>;
     }
 
     render() {
       return (
-        <div className="User">
-          <form onSubmit={this.handleOnSubmit}>
-            <div>
-              <p>username:</p>
-              <p><input name="userName" type="text" value={this.state.userName} onChange={this.handleOnChange} /></p>
-            </div>
-
-            <div>
-              <p>city:</p>
-              <p><input name="city" type="text" value={this.state.city} onChange={this.handleOnChange}/></p>
-            </div>
-
-            <div>
-              <p>email:</p>
-              <p><input name="email" type="email" value={this.state.email} onChange={this.handleOnChange} /></p>
-            </div>
-
-            <div>
-              <p>cell:</p>
-              <p><input name="phone" type="tel" value={this.state.phone} onChange={this.handleOnChange} /></p>
-            </div>
-
-            <p><button>Create</button></p>
-          </form>
+        <div>
+          <input
+            type="text"
+            onChange={this.onNameChange}
+            value={this.state.user.name} />
+          <input
+            type="submit"
+            value="save"
+            onClick={this.onClickSave} />
+            {this.props.users.map(this.userRow)}
         </div>
       );
     }
   }
 
-  export default User;
+function mapStateToProps(state, ownProps) {
+  return {
+    users: state.users
+  }
+}
+// export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
+export default connect(mapStateToProps)(Users);

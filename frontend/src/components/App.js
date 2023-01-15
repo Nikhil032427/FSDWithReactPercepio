@@ -1,23 +1,37 @@
 import React, { Component } from 'react';
-import User from './User/User';
-import Header from '../shared/components/layout/Header';
-import Content from '../shared/components/layout/Content';
-import Footer from '../shared/components/layout/Footer';
+import axios from 'axios';
 import './App.css';
 
+
 class App extends Component {
-  render() {
+  constructor () {
+    super()
+    this.state = {
+      user: ''
+    }
+    this.handleGet = this.handleGet.bind(this)
+  }
+
+  handleGet () {
+    axios.get('http://localhost/v1/users')
+    .then(response => console.log(response))
+  }
+
+  handlePost () {
+    axios.post('http://localhost/v1/users',{user:'tom',city:'toronto'})
+    .then(response => console.log(response))
+  }
+
+  render () {
     return (
-      <div className="App">
-        <Header title="Create User" />
-        <h1>HRED-Tracker</h1>
-        <Content>
-          <User />
-        </Content>
-        <Footer />
+      <div className='button_container'>
+        {/* <button className='button' onClick={this.handleGet}>
+          Get request */}
+          <button className='button' onClick={this.handlePost}>
+            Post request
+        </button>
       </div>
-    );
+    )
   }
 }
-
-export default App;
+export default App
